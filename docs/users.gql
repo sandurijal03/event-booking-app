@@ -1,0 +1,27 @@
+query LIST_OF_USERS {
+  users {
+    _id
+    email
+    createdEvents {
+      title
+      description
+      price
+    }
+  }
+}
+
+mutation CREATE_USER($email: String!, $password: String!) {
+  createUser(userInput: { email: $email, password: $password }) {
+    _id
+    email
+    password
+  }
+}
+
+query LOGIN($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    userId
+    token
+    tokenExpiration
+  }
+}
