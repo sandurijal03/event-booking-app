@@ -41,14 +41,14 @@ class App extends React.Component {
           <MainNavigation />
           <main className='main-content'>
             <Switch>
-              {!this.state.token && <Redirect exact from='/' to='/auth' />}
-              {this.state.token && <Redirect exact from='/events' to='/auth' />}
+              {this.state.token && <Redirect exact from='/' to='/events' />}
               {this.state.token && <Redirect exact from='/auth' to='/events' />}
               {!this.state.token && <Route path='/auth' component={AuthPage} />}
               <Route exact path='/events' component={Events} />
               {this.state.token && (
                 <Route exact path='/bookings' component={Bookings} />
               )}
+              {!this.state.token && <Redirect exact to='/auth' />}
             </Switch>
           </main>
         </AuthContext.Provider>
