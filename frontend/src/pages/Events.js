@@ -58,16 +58,22 @@ export default class Events extends Component {
 
     const requestBody = {
       query: `
-          mutation {
-            createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
+          mutation CREATING_EVENT($title: String!, $description: String!, $price: Float!, $date: String!) {
+            createEvent(eventInput: {title: $title, description: $description, price: $price, date: $date}) {
               _id
               title
-              description
-              date
+              description 
               price
+              date
             }
           }
         `,
+      variables: {
+        title,
+        description,
+        price,
+        date,
+      },
     };
 
     const token = this.context.token;
@@ -116,13 +122,13 @@ export default class Events extends Component {
     this.setState({ isLoading: true });
     const requestBody = {
       query: `
-          query {
+          query LIST_OF_EVENTS {
             events {
               _id
               title
               description
-              date
               price
+              date
               creator {
                 _id
                 email
@@ -169,17 +175,21 @@ export default class Events extends Component {
   bookEventHandler = () => {
     if (!this.context.token) {
       this.setState({ selectedEvent: null });
+      return;
     }
     const requestBody = {
       query: `
-          mutation {
-            bookEvent(eventId: "${this.state.selectedEvent._id}") {
+          mutation BOOK_EVENT($id: ID!) {
+            bookEvent(eventId: $id) {
               _id
               createdAt
               updatedAt
             }
           }
         `,
+      variables: {
+        id: this.state.selectedEvent._id,
+      },
     };
 
     fetch('http://localhost:3001/graphql', {

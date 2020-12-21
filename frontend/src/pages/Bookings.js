@@ -62,19 +62,20 @@ export default class Bookings extends Component {
   deleteBookingHandler = (bookingId) => {
     const requestBody = {
       query: `
-          mutation {
-            cancelBooking(bookingId: "${bookingId}") {
-                _id
-                title
-                date
+          mutation CANCEL_BOOKING($bookingId: ID!) {
+            cancelBooking(bookingId: $bookingId) {
+              _id
+              title
             }
           }
         `,
+      variables: {
+        bookingId,
+      },
     };
 
     fetch('http://localhost:3001/graphql', {
       method: 'POST',
-
       body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json',

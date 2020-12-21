@@ -28,8 +28,10 @@ mutation CREATING_EVENT(
       date: $date
     }
   ) {
-    creator {
-      email
-    }
+    _id
+    title
+    description
+    price
+    date
   }
 }

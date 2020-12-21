@@ -32,26 +32,37 @@ export default class AuthPage extends Component {
 
     let requestBody = {
       query: `
-        query {
-        login(email: "${email}", password: "${password}") {
-          userId
-          token
-          tokenExpiration
+        query LOGIN($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
+            userId
+            token
+            tokenExpiration
           }
         }
       `,
+      variables: {
+        email,
+        password,
+      },
     };
 
     if (!this.state.isLogin) {
       requestBody = {
         query: `
-            mutation {
-              createUser(userInput: { email: "${email}", password: "${password}" }) {
-                _id
-                email
-              }
-            }     
-            `,
+            mutation CREATE_USER($email: String!, $password: String!) {
+              createUser(userInput: { email: $email, password: $password }) {
+            _id
+           email
+           password
+            }
+          }     
+        `,
+        variables: {
+          userInput: {
+            email,
+            password,
+          },
+        },
       };
     }
 
