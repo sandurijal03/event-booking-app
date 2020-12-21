@@ -9,7 +9,7 @@ const events = async (eventIds) => {
       return transformEvent(event);
     });
   } catch (err) {
-    throw new err();
+    throw err;
   }
 };
 
@@ -46,9 +46,9 @@ const transformEvent = (event) => {
 
 const transformingBooking = (booking) => {
   return {
-    ...booking.event._doc,
+    ...booking._doc,
     _id: booking.id,
-    user: user.bind(this, booking._doc, user),
+    user: user.bind(this, booking._doc.user),
     event: singleEvent.bind(this, booking._doc.event),
     createdAt: dateToString(booking._doc.createdAt),
     updatedAt: dateToString(booking._doc.updatedAt),

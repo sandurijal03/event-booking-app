@@ -34,7 +34,7 @@ module.exports = {
         throw new Error('Users not exists');
       }
       creator.createdEvents.push(event);
-      creator.save();
+      await creator.save();
       return createdEvent;
     } catch (err) {
       throw err;
