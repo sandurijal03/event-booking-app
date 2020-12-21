@@ -16,7 +16,7 @@ export default class Events extends Component {
     selectedEvent: null,
   };
 
-  isActive = false;
+  isActive = true;
 
   static contextType = AuthContext;
 

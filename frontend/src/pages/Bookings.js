@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AuthContext from '../context/auth-context';
 import Spinner from '../components/Spinner/Spinner';
+import BookingList from '../components/Bookings/BookingList/BookingList';
 
 export default class Bookings extends Component {
   state = {
@@ -58,20 +59,58 @@ export default class Bookings extends Component {
       });
   };
 
+  deleteBookingHandler = (bookingId) => {
+    const requestBody = {
+      query: `
+          mutation {
+            cancelBooking(bookingId: "${bookingId}") {
+                _id
+                title
+                date
+            }
+          }
+        `,
+    };
+
+    fetch('http://localhost:3001/graphql', {
+      method: 'POST',
+
+      body: JSON.stringify(requestBody),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.context.token}`,
+      },
+    })
+      .then((res) => {
+        if (res.status !== 200 && res.status !== 201) {
+          throw new Error('Failed!');
+        }
+        return res.json();
+      })
+      .then((resData) => {
+        this.setState((prevState) => {
+          const updateBookings = prevState.bookings.filter((booking) => {
+            return booking._id !== bookingId;
+          });
+          return { bookings: updateBookings, isLoading: false };
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        this.setState({ isLoading: false });
+      });
+  };
+
   render() {
     return (
       <>
         {this.state.isLoading ? (
           <Spinner />
         ) : (
-          <ul>
-            {this.state.bookings.map((booking) => (
-              <li key={booking._id}>
-                {booking.event.title} -
-                {new Date(booking.createdAt).toLocaleDateString()}
-              </li>
-            ))}
-          </ul>
+          <BookingList
+            bookings={this.state.bookings}
+            onDelete={this.deleteBookingHandler}
+          />
         )}
       </>
     );
