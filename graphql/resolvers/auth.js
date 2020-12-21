@@ -3,17 +3,6 @@ const User = require('../../models/user');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  users: async (args) => {
-    try {
-      const users = await User.find().populate('createdEvents');
-      return users.map((user) => {
-        return { ...user._doc, password: null };
-      });
-    } catch (err) {
-      throw err;
-    }
-  },
-
   createUser: async (args) => {
     try {
       const existingUser = await User.findOne({ email: args.userInput.email });
